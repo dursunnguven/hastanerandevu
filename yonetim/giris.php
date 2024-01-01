@@ -34,6 +34,7 @@
 <?php
 include("vtbaglan.php");
 session_start();
+
 if(!isset($_SESSION["login"]))
 {
 	echo "Bu sayfayı görüntüleme yetkiniz yok!<br>";
@@ -41,18 +42,25 @@ if(!isset($_SESSION["login"]))
 }
 else
 {
-	echo '<br><img src="images/logo.jpg" width="280px"><br><br><h2>YÖNETİM PANELİ</h2><br>
-		
-		<a href=randevulistele.php class="btn">👨‍⚕️Randevuları İşlemleri👨‍⚕️</a><br>
-		<a href=uyeislemleri.php class="btn">🔐Üyelik İşlemleri🔐</a><br>
+    // SQL Server bağlantısı için gerekli bilgiler
+    $serverName = "localhost";
+    $connectionOptions = array(
+        "Database" => "hastane",
+        "Uid" => "LAPTOP-P4GFCGMO\SQLEXPRESS",
+        "PWD" => "Dgüven4343."
+    );
 
+    // SQL Server bağlantısı
+    $conn = sqlsrv_connect($serverName, $connectionOptions);
 
-
-
-
-	';
-	echo '<a href=cikis.php class="btn"><font color="red">❌Çıkış Yap❌</font></a>';
-		
+    if ($conn) {
+        echo '<br><img src="images/logo.jpg" width="280px"><br><br><h2>YÖNETİM PANELİ</h2><br>';
+        echo '<a href=randevulistele.php class="btn">👨‍⚕️Randevuları İşlemleri👨‍⚕️</a><br>';
+        echo '<a href=uyeislemleri.php class="btn">🔐Üyelik İşlemleri🔐</a><br>';
+        echo '<a href=cikis.php class="btn"><font color="red">❌Çıkış Yap❌</font></a>';
+    } else {
+        echo "Bağlantı hatası: " . sqlsrv_errors();
+    }
 }
 ?>
 </font>

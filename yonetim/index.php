@@ -1,94 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>Yönetim Paneli</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/ico.png"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-<!--===============================================================================================-->
-</head>
-<body>
-	
-	
-	<div class="container-login100" style="background-image: url('images/bg-01.jpg');">
-		<div class="wrap-login100 p-l-55 p-r-55 p-t-80 p-b-30">
-			<form class="login100-form validate-form" action="kontrol.php" method="post">
-				<span class="login100-form-title p-b-37">
-					<img src="images/logo.jpg" width="280px">
-					<h4>Giriş Yap</h4>
-				</span>
+<?php
+include("vtbaglan.php");
+session_start(); //oturum açma işlemini başlatıyoruz
 
-				<div class="wrap-input100 validate-input m-b-20" data-validate="Lütfen Kullanıcı Adınızı Yazın">
-					<input class="input100" type="text" name="kadi" placeholder="Kullanıcı Adı">
-					<span class="focus-input100"></span>
-				</div>
+$kadi = $_POST['kadi'];  //formdan gelen veriyi değişkene atıyoruz
+$sifre = $_POST['sifre']; //formdan gelen veriyi değişkene atıyoruz
 
-				<div class="wrap-input100 validate-input m-b-25" data-validate = "Lütfen Şifrenizi Yazın">
-					<input class="input100" type="password" name="sifre" placeholder="Şifre">
-					<span class="focus-input100"></span>
-				</div>
+// SQL Server bağlantısı için gerekli bilgiler
+$serverName = "localhost";
+$connectionOptions = array(
+    "Database" => "hastane",
+    "Uid" => "LAPTOP-P4GFCGMO\SQLEXPRESS",
+    "PWD" => "Dgüven4343."
+);
 
-				<div class="container-login100-form-btn">
-					<button class="login100-form-btn">
-						GİRİŞ YAP
-					</button>
-				</div>
-	
-				
-			</form>
-				<center>
-				    	<br>
-				    		<a href="sifremiunuttum.php">Şifremi Unuttum</a>
-				    	<br>
-				    		<a href="kayitol.php">Hesap Oluştur</a>
-				    	<br>
-							<a href="../">Siteye Dön</a>
-						<br>
-							<a href="#">Desing by colorlib.com</a>
-				</center>
-		</div>
-	</div>
-	
-	
+// SQL Server bağlantısı
+$conn = sqlsrv_connect($serverName, $connectionOptions);
 
-	<div id="dropDownSelect1"></div>
-	
-<!--===============================================================================================-->
-	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/animsition/js/animsition.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/bootstrap/js/popper.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/daterangepicker/moment.min.js"></script>
-	<script src="vendor/daterangepicker/daterangepicker.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/countdowntime/countdowntime.js"></script>
-<!--===============================================================================================-->
-	<script src="js/main.js"></script>
+if ($conn) {
+    // SQL Server sorgusu
+    $query = "SELECT * FROM kullanicilar WHERE kadi = ? AND sifre = ?";
+    
+    // Parametre değerleri
+    $params = array($kadi, $sifre);
 
-</body>
-</html>
+    // Sorguyu hazırla ve çalıştır
+    $stmt = sqlsrv_query($conn, $query, $params);
+
+    if ($stmt === false) {
+        die(print_r(sqlsrv_errors(), true));
+    }
+
+    // Sorgu sonuçlarını kontrol et
+    if (sqlsrv_has_rows($stmt)) {
+        $_SESSION["login"] = "true";
+        $_SESSION["user"] = $kadi;
+        $_SESSION["pass"] = $sifre;
+        header("location:giris.php");
+    } else {
+        echo "Kullanıcı adı veya şifre hatalı. <br> Giriş sayfasına yönlendiriliyorsunuz.";
+        header("refresh:2 ; url=index.php");
+    }
+
+    // Bağlantıyı kapat
+    sqlsrv_close($conn);
+} else {
+    echo "Bağlantı hatası: " . sqlsrv_errors();
+}
+?>

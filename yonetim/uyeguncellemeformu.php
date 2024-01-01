@@ -150,78 +150,71 @@ td.text-right {
 </head>
 <body>
 	<font face="arial">
-<center>
+		<center>
 
+		<?php
+			// güncellenecek ID'yi alıyoruz
+			$guncelleid = $_GET['id'];
 
+			include("vtbaglan.php"); //vtbaglan.php sayfasındaki tüm kodları bu sayfaya çağırdık
 
-<?php
+			$sql = "SELECT * FROM kullanicilar WHERE id = ?";
+			$params = array($guncelleid);
+			$options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+			$sonuc1 = sqlsrv_query($conn, $sql, $params, $options);
 
-//güncellenecek ID'yi alıyoruz
-$guncelleid=$_GET['id'];
+			// Sorgunun sonucunda dönen satır sayısına sqlsrv_num_rows() fonksiyonu ile bakıyoruz
+			$satirsay = sqlsrv_num_rows($sonuc1);
 
-include("vtbaglan.php"); //vtbaglan.php sayfasındaki tüm kodları bu sayfaya çağırdık
+			if ($satirsay > 0) {
+				$satir = sqlsrv_fetch_array($sonuc1, SQLSRV_FETCH_ASSOC);
+				// Kayıt bulundu
+				// Bu kısımda form içine veritabanında çekilen değerleri yazıyoruz.
+				echo '<form action="uyeguncelle.php?id='.$guncelleid.'" method="post" name="form">
+						<table border="1" class="table-fill">
+							<tr>
+								<td colspan="2">
+									<div align="center"><b>'.$guncelleid.' Nolu Üyeyi Güncelleme</b></div>
+								</td>
+							<tr>
+							<td>Kullanıcı Adı:</td>
+							<td><input type="text" name="kadi" required="required"  value="'.$satir['kadi'].'"> </td>
+							</tr>
 
+							<tr>
+							<td>Ad Soyad:</td>
+							<td><input type="text" name="adsoyad"  required="required" value="'.$satir['adsoyad'].'"> </td>
+							</tr>
 
-$sql="select * from kullanicilar WHERE id=".$guncelleid;
+							<tr>
+							<td>E-mail Adresi:</td>
+							<td><input type="mail" name="mail"  required="required" value="'.$satir['mail'].'"> </td>
+							</tr>
 
-//Sorgumuzu veritabanına gönderiyoruz.
-$sonuc1= mysqli_query($baglanti,$sql);
+							<tr>
+							<td>Şifre:</td>
+							<td><input type="text" name="sifre"  required="required" value="'.$satir['sifre'].'"> </td>
+							</tr>
 
-//Sorgunun sonucunda dönen satır sayısına mysql_num_rows() fonksiyonu ile bakıyoruz
-$satirsay=mysqli_num_rows($sonuc1);
-
-if ($satirsay>0)
-{
-    $satir = mysqli_fetch_array($sonuc1);
-    //Kayıt bulundu
-    //Bu kısımda form içine veritabanında çekilen değerleri yazıyoruz.
-echo '<form action="uyeguncelle.php?id='.$guncelleid.'" method="post" name="form">
-		<table border="1" class="table-fill">
-			<tr>
-				<td colspan="2">
-			<div align="center"><b>'.$guncelleid.' Nolu Üyeyi Güncelleme</b></div>
-				</td>
-			<tr>
-                <td>Kullanıcı Adı:</td>
-                <td><input type="text" name="kadi" required="required"  value="'.$satir['kadi'].'"> </td>
-            </tr>
-
-            <tr>
-                <td>Ad Soyad:</td>
-                <td><input type="text" name="adsoyad"  required="required" value="'.$satir['adsoyad'].'"> </td>
-            </tr>
-
-
-
-            <tr>
-                <td>E-mail Adresi:</td>
-                <td><input type="mail" name="mail"  required="required" value="'.$satir['mail'].'"> </td>
-            </tr>
-
-
-           
-            <tr>
-                <td>Şifre:</td>
-               <td><input type="text" name="sifre"  required="required" value="'.$satir['sifre'].'"> </td>
-            </tr>
-
-
+							<td colspan="2">
+								<div align="right"> 
+									<a href=uyelistele.php>Listeye Dön</a> 
+									<input type="reset" value="Geri Al">&nbsp;&nbsp;
+									<input type="submit" value="Güncelle" />&nbsp;
+								</div>
+							</td>
+						</tr>
+					</table>
+					</form>';
+			} else {
+				// Kayıt bulunamadı
+				echo "Aranılan kayıt bulunamadı";
+			}
 			
-<td colspan="2"><div align="right"> <a href=uyelistele.php>Listeye Dön</a> <input type="reset" value="Geri Al">&nbsp;&nbsp;<input type="submit" value="Güncelle" />&nbsp;</div></td>
-</tr>
-</table>
-</form>';
+			sqlsrv_close($conn);
+		?>
 
- 
-} else {
-//Kayıt bulunamadı
-echo "Aranılan kayıt bulunamadı";
-}
- 
-?>
-
-
-</center>
-</font>
+		</center>
+	</font>
 </body>
 </html>

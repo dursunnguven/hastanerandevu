@@ -1,67 +1,66 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Üye Kayıt</title>
-    <meta charset="utf-8">
-      <!-- yönlendirme -->
-<meta http-equiv="refresh" content="5;URL=index.php">
-<!-- yönlendirme -->
-    </head>
-    <body>
-        <font face="arial">
-     <center>
-          <?php 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
 
-include("vtbaglan.php"); //vtbaglan.php sayfasındaki tüm kodları bu sayfaya çağırdık
-
-if($_POST)
-     $kadi = $_POST['kadi'];
-     $adsoyad = $_POST['adsoyad'];
-     $mail = $_POST['mail'];
-     $sifre = $_POST['sifre'];
-     $kod = $_POST['kod'];
-     $kayittarihi = date('d.m.Y');
-     $ipadresi = $_SERVER["REMOTE_ADDR"];
-
-      if($kod == "ecb0")
-      {
-     
-     if($ekle=mysqli_query($baglanti,"INSERT INTO kullanicilar(kadi,adsoyad,mail,sifre,kayittarihi,ipadresi) VALUES('$kadi','$adsoyad','$mail','$sifre','$kayittarihi','$ipadresi')"))
-     
-     {
-          echo 'Başarıyla Üye Oldunuz. <br> <a href="index.php">Giriş Sayfasına Dön</a>';
-          
-          }
-          else 
-          {
-               echo 'Hata! Üye Olamadınız. <br> <a href="index.php">Giriş Sayfasına Dön</a>';
-               }
-
-          } else {
-
-            echo '<br><br> <h2>Hastanenin size verdiği hesap oluşturabilme<br>yetki kodunu yanış girdiniz.</h2> <br>';
-          }
-               
-
- ?>
- <!-- Geri sayım -->
-<script>
-var i=5; //Geri sayımın başlıyacağı süre
-function saydir()
-{
-i--;
-var eleman= document.getElementById("gerisayim");
- eleman.innerHTML=i+" saniye sonra giriş sayfasına yönlendirileceksiniz.";
+<style type="text/css">
+.btn {
+    background-color: white;
+    border: 2px solid #09F;
+    border-radius:8px;
+    color: #09F;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12pt;
+    font-family:Verdana;
+    margin: 4px 2px;
+    transition: all 0.4s;    
+    -webkit-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    -o-transition: all 0.4s;
 }
-setInterval("saydir()",1000);
-</script>
+.btn:hover {
+    box-shadow: 0 4px 8px 0 gray, 0 6px 20px 0 gray;
+}
+</style> 
+</head>
+
+<body>
+    <CENTER>
+        <font face="arial">
+<?php
+include("vtbaglan.php");
+session_start();
+if(!isset($_SESSION["login"]))
+{
+    echo "Bu sayfayı görüntüleme yetkiniz yok!<br>";
+    echo "<a href=index.php>Giriş Sayfası</a>";
+}
+else
+{
+    echo '<br><img src="images/logo.jpg" width="280px"><br><br><h2>ÜYE İŞLEMLERİ</h2><br>
+        
+
+        <a href=uyelistele.php class="btn">📄Üyeleri Görüntüle-Güncelle-Sil📄</a><br>
+
+        <a href=kayitol.php class="btn">➕Yeni Üye Oluştur➕</a><br>
+        
+        <a href=yenisifre.php class="btn">🔑Şifreyi Değiştir🔑</a><br>
+
+        <a href=giris.php class="btn">👈Geri Git👈</a><br>
 
 
 
-<div id="gerisayim"></div>
 
-<!-- Geri sayım  -->
-    </center>
-    </font>
-        </body>
-</html> 
+    ';
+    echo '<a href=cikis.php class="btn"><font color="red">❌Çıkış Yap❌</font></a>';
+        
+}
+?>
+</font>
+</CENTER>
+</body>
+</html>

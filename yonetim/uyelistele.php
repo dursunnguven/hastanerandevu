@@ -33,7 +33,6 @@ div.table-title {
    text-transform:uppercase;
 }
 
-
 /*** Table Styles **/
 
 .table-fill {
@@ -167,39 +166,4 @@ td.text-right {
 		<th><b>E-Posta</b></th>
 		<th><b>Şifre</b></th>
 		<th><b>IP Adresi</b></th>
-		<th><b>Kayıt Tarihi</b></th>
-		<th><b>Güncelle</b></th>
-		<th><b>Sil</b></th>
-	</tr>
-</thead>
-	
-<?php
-
-include("vtbaglan.php"); //vtbaglan.php sayfasındaki tüm kodları bu sayfaya çağırdık
-
-
-
-
-
-$sorgu= mysqli_query($baglanti,"select * from kullanicilar");
-while($satir=mysqli_fetch_array($sorgu))
-{
-	echo '<tr>';
-	echo '<td>'.$satir['kadi'].'</td>';
-	echo '<td>'.$satir['adsoyad'].'</td>';
-	echo '<td>'.$satir['mail'].'</td>';
-	echo '<td>'.$satir['sifre'].'</td>';
-	echo '<td>'.$satir['ipadresi'].'</td>';
-	echo '<td>'.$satir['kayittarihi'].'</td>';
-	echo '<td> <a href="uyeguncellemeformu.php?id='.$satir['id'].'" >Güncelle</a></td>';
-	echo '<td> <a href="uyesil.php?id='.$satir['id'].'">Sil</a> </td>';
-	echo '<tr>';	
-}
-
-?>
-</table>
-
-</center>
-
-</body>
-</html>
+		<th><b>Kayıt Tarihi</b

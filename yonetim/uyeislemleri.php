@@ -34,6 +34,20 @@
 <?php
 include("vtbaglan.php");
 session_start();
+
+// SQL Server bağlantı bilgileri
+$serverName = "localhost";
+$connectionOptions = array(
+    "Database" => "hastane",
+    "Uid" => "LAPTOP-P4GFCGMO\SQLEXPRESS",
+    "PWD" => "Dgüven4343."
+);
+$conn = sqlsrv_connect($serverName, $connectionOptions);
+
+if (!$conn) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
 if(!isset($_SESSION["login"]))
 {
 	echo "Bu sayfayı görüntüleme yetkiniz yok!<br>";
@@ -51,14 +65,11 @@ else
 		
 		<a href=yenisifre.php class="btn">🔑Şifreyi Değiştir🔑</a><br>
 
-		<a href=giris.php class="btn">👈Geri Git👈</a><br>
+		<a href=giris.php class="btn">👈Geri Git👈</a><br>';
 
-
-
-
-	';
 	echo '<a href=cikis.php class="btn"><font color="red">❌Çıkış Yap❌</font></a>';
 		
+	sqlsrv_close($conn);
 }
 ?>
 </font>
